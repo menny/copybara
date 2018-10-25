@@ -27,6 +27,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -41,8 +42,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 @Parameters(separators = "=")
 public final class MainArguments {
   private final Logger logger = Logger.getLogger(this.getClass().getName());
-
-  public static final String COPYBARA_SKYLARK_CONFIG_FILENAME = "copy.bara.sky";
 
   // TODO(danielromero): Annotate the subcommands with the documentation and generate this
   // automatically.
@@ -112,8 +111,8 @@ public final class MainArguments {
       return new CommandWithArgs(defaultCmd, ImmutableList.of());
     }
     String firstArg = unnamed.get(0);
-    // Default command might take a config file as param.
-    if (firstArg.endsWith(COPYBARA_SKYLARK_CONFIG_FILENAME)) {
+    // Default command might take a config file as param. If the file exists, it means it's a config file
+    if (Files.isRegularFile(Paths.get(firstArg))) {
       return new CommandWithArgs(defaultCmd, ImmutableList.copyOf(unnamed));
     }
 
